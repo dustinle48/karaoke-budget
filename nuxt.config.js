@@ -54,5 +54,9 @@ export default {
   axios: {
     /* baseURL: 'http://localhost:1337/' */
     baseURL: 'https://sach-luyen-du-hoc-backend.herokuapp.com/'
+  },
+
+  generate: {
+    fallback: true
   }
 }
