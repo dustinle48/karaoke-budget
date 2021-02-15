@@ -38,7 +38,6 @@
                                         <v-text-field outlined label="Tên bài hát" v-model="name"></v-text-field>
                                         <v-text-field outlined label="Link bài hát" v-model="videoId"></v-text-field>
                                         <v-btn type="submit">Thêm</v-btn>
-                                        <v-btn @click="count">Đếm</v-btn>
                                     </v-form>
                                 </v-col>
                             </v-row>
@@ -63,6 +62,7 @@ export default {
         }
     },
     mounted() {
+        this.count()
         this.getAllSong()
     },
     computed: {
@@ -97,6 +97,7 @@ export default {
                 songid: this.songId,
                 videoid: getIdFromURL(this.videoId)
                 })
+                this.count()
                 this.name = ''
                 this.songId = ''
             } catch(e) {
