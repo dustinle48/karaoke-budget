@@ -12,7 +12,7 @@
             v-on="on"
             class="menu-btn"
             >
-            <v-icon>mdi-post</v-icon>
+                <v-icon>mdi-post</v-icon>
             </v-btn>
         </template>
 
@@ -21,13 +21,14 @@
             <!-- Bên trái -->
             <v-col cols="4">
                 <v-row>
-                <v-col>
-                    <v-text-field outlined label="Mã bài hát" v-model="songIdToAdd" clearable></v-text-field>
-                    <p v-if="msg" class="text--disabled">{{ error }}</p>
-                    <v-btn @click="addSongToList" :disabled="!songIdToAdd">Thêm</v-btn>
-                    <v-btn @click="addSongToTop" :disabled="!songIdToAdd">Lên đầu</v-btn>
-                    <v-btn @click="nextSong">Next</v-btn>
-                </v-col>
+                    <v-col>
+                        <v-text-field outlined label="Mã bài hát" v-model="songIdToAdd" clearable></v-text-field>
+                        <p v-if="msg" class="text--disabled">{{ error }}</p>
+                        <v-btn @click="addSongToList" :disabled="!songIdToAdd">Thêm</v-btn>
+                        <v-btn @click="addSongToTop" :disabled="!songIdToAdd">Lên đầu</v-btn>
+                        <v-btn @click="nextSong">Next</v-btn>
+                        <v-btn to="/"><v-icon>mdi-home</v-icon></v-btn>
+                    </v-col>
                 </v-row>
             </v-col>
 

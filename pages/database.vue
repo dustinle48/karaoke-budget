@@ -4,8 +4,9 @@
             <v-col class="hidden-md-and-down"></v-col>
             <v-col>
                 <v-tabs class="tall" centered>
-                    <v-tab >Dò bài</v-tab>
+                    <v-tab>Dò bài</v-tab>
                     <v-tab>Thêm bài</v-tab>
+                    <v-tab to="/">Home</v-tab>
 
                     <v-tab-item>
                         <v-data-table
@@ -19,6 +20,9 @@
                             <v-text-field
                                 v-model="search"
                                 label="Search"
+                                append-icon="mdi-magnify"
+                                single-line
+                                hide-details
                                 class="mx-4"
                             ></v-text-field>
                         </template>
@@ -51,6 +55,7 @@
 export default {
     data() {
         return {
+            search: '',
             songs: [],
             name: '',
             songId: '',
@@ -101,12 +106,6 @@ export default {
         async count() {
             this.songId = await this.$axios.$get('/karaokes/count') + 1
         },
-        search (name, search) {
-        return name != null &&
-          search != null &&
-          typeof name === 'string' &&
-          value.toString().indexOf(search) !== -1
-      },
     }
 }
 </script>
