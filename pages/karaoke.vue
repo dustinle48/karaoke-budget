@@ -27,7 +27,7 @@
                         <v-btn @click="addSongToList" :disabled="!songIdToAdd">Thêm</v-btn>
                         <v-btn @click="addSongToTop" :disabled="!songIdToAdd">Lên đầu</v-btn>
                         <v-btn @click="nextSong">Next</v-btn>
-                        <v-btn to="/"><v-icon>mdi-home</v-icon></v-btn>
+                        <v-btn class="ma-6" to="/"><v-icon>mdi-home</v-icon></v-btn>
                     </v-col>
                 </v-row>
             </v-col>
