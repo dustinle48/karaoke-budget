@@ -3,6 +3,7 @@
         <v-row class="tall">
             <v-col class="hidden-md-and-down"></v-col>
             <v-col>
+                <h2>{{ error }}</h2>
                 <v-tabs class="tall" centered>
                     <v-tab>Dò bài</v-tab>
                     <v-tab>Thêm bài</v-tab>
@@ -46,7 +47,7 @@
                                                     digits: 5,
                                                 }"
                                             >
-                                                <v-text-field outlined label="Mã bài hát" :error-messages="errors" placeholder="Chọn ngẫu nhiên 1 số 5 chữ số" v-on:focusout="checkId" v-model="songId"></v-text-field>
+                                                <v-text-field outlined label="Mã bài hát" :error-messages="errors" placeholder="Chọn ngẫu nhiên 1 số 5 chữ số" v-on:focusout="checkId" v-model="songId" clearable></v-text-field>
                                             </validation-provider>
 
                                             <p class="text--disabled">{{ msg }}</p>
@@ -56,7 +57,7 @@
                                                 name="Name"
                                                 rules="required"
                                             >
-                                            <v-text-field outlined label="Tên bài hát" :error-messages="errors" v-model="name"></v-text-field>
+                                            <v-text-field outlined label="Tên bài hát" :error-messages="errors" v-model="name" clearable></v-text-field>
                                             </validation-provider>
                                             
                                             <validation-provider
@@ -64,10 +65,11 @@
                                                 name="Link"
                                                 rules="required"
                                             >
-                                            <v-text-field outlined label="Link bài hát" :error-messages="errors" v-model="videoId"></v-text-field>
+                                            <v-text-field outlined label="Link bài hát" :error-messages="errors" v-model="videoId" clearable></v-text-field>
                                             </validation-provider>
 
                                             <v-btn :disabled="idCheck==true || invalid" type="submit">Thêm</v-btn>
+                                            <v-btn @click="clear">Xóa</v-btn>
                                         </v-form>
                                     </validation-observer>
                                 </v-col>
@@ -123,6 +125,7 @@ export default {
             name: '',
             songId: '',
             videoId: '',
+            error: '',
         }
     },
     mounted() {
@@ -145,26 +148,33 @@ export default {
         }
     },
     methods: {
+        clear() {
+            this.songId = ''
+            this.name = ''
+            this.videoId = ''
+        },
         async getAllSong() {
             try {
                 const songs = await this.$axios.$get('/karaokes')
                 this.songs = songs
+                this.error = ''
             } catch(e) {
-
+                this.error = 'Kết nối với server bị lỗi, vui lòng thử lại'
             }
         },
         async addToDatabase() {
             try {
                 this.$axios.$post('/karaokes', {
-                name: this.name,
-                songid: this.songId,
-                videoid: getIdFromUrl(this.videoId)
+                    name: this.name,
+                    songid: this.songId,
+                    videoid: getIdFromUrl(this.videoId)
                 })
-                this.count()
+                this.getAllSong()
                 this.name = ''
                 this.songId = ''
+                this.error = ''
             } catch(e) {
-
+                this.error = 'Kết nối với server bị lỗi, vui lòng thử lại'
             }
         },
         async checkId() {
