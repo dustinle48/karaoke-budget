@@ -125,8 +125,9 @@ export default {
                 const song = await this.$axios.$get(`/karaokes/${this.songIdToAdd}`)
                 this.songIdToAdd = ''
                 this.songList.push(song)
-            } catch(e) {
                 this.msg = 'Đã thêm bài vào list'
+            } catch(e) {
+                this.msg = 'Bài hát không tồn tại'
                 this.songIdToAdd = ''
             }
         },
