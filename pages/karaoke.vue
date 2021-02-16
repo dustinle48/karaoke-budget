@@ -63,8 +63,9 @@
         </div>
         </v-menu>
 
-        <div class="text-center">
-            <h1 v-if="songList.length == 0">Chọn bài đi, đừng ngại</h1>
+        <div class="text-center" v-if="songList.length == 0">
+            <h1>Chọn bài đi, đừng ngại</h1>
+            <h1>Bấm F11 để mở full màn hình</h1>
         </div>
 
         <client-only>
@@ -78,7 +79,6 @@
 <script>
 import Vue from 'vue'
 import VueYouTubeEmbed from 'vue-youtube-embed'
-import { getIdFromURL } from 'vue-youtube-embed'
 Vue.use(VueYouTubeEmbed)
 export default {
     head: {
