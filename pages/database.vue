@@ -33,12 +33,43 @@
                         <div class="adder mt-6">
                             <v-row>
                                 <v-col>
-                                    <v-form @submit.prevent="addToDatabase">
-                                        <v-text-field outlined label="Mã bài hát" disabled v-model="songId"></v-text-field>
-                                        <v-text-field outlined label="Tên bài hát" v-model="name"></v-text-field>
-                                        <v-text-field outlined label="Link bài hát" v-model="videoId"></v-text-field>
-                                        <v-btn type="submit">Thêm</v-btn>
-                                    </v-form>
+                                    <validation-observer
+                                        ref="observer"
+                                        v-slot="{ invalid }"
+                                    >
+                                        <v-form @submit.prevent="addToDatabase">
+                                            <validation-provider
+                                                v-slot="{ errors }"
+                                                name="Song ID"
+                                                :rules="{
+                                                    required: true,
+                                                    digits: 5,
+                                                }"
+                                            >
+                                                <v-text-field outlined label="Mã bài hát" :error-messages="errors" placeholder="Chọn ngẫu nhiên 1 số 5 chữ số" v-on:focusout="checkId" v-model="songId"></v-text-field>
+                                            </validation-provider>
+
+                                            <p class="text--disabled">{{ msg }}</p>
+
+                                            <validation-provider
+                                                v-slot="{ errors }"
+                                                name="Name"
+                                                rules="required"
+                                            >
+                                            <v-text-field outlined label="Tên bài hát" :error-messages="errors" v-model="name"></v-text-field>
+                                            </validation-provider>
+                                            
+                                            <validation-provider
+                                                v-slot="{ errors }"
+                                                name="Link"
+                                                rules="required"
+                                            >
+                                            <v-text-field outlined label="Link bài hát" :error-messages="errors" v-model="videoId"></v-text-field>
+                                            </validation-provider>
+
+                                            <v-btn :disabled="idCheck==true || invalid" type="submit">Thêm</v-btn>
+                                        </v-form>
+                                    </validation-observer>
                                 </v-col>
                             </v-row>
                         </div>
@@ -52,11 +83,41 @@
 
 <script>
 import { getIdFromUrl } from 'vue-youtube'
+import { required, digits, email, max } from 'vee-validate/dist/rules'
+import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
+
+setInteractionMode('eager')
+
+extend('digits', {
+...digits,
+message: '{_field_} needs to be {length} digits. ({_value_})',
+})
+
+extend('required', {
+...required,
+message: '{_field_} can not be empty',
+})
+
+extend('max', {
+...max,
+message: '{_field_} may not be greater than {length} characters',
+})
+
+extend('email', {
+...email,
+message: 'Email must be valid',
+})
 
 export default {
+    components: {
+        ValidationProvider,
+        ValidationObserver,
+    },
     layout: 'scroll',
     data() {
         return {
+            msg: '',
+            idCheck: true,
             search: '',
             songs: [],
             name: '',
@@ -65,7 +126,6 @@ export default {
         }
     },
     mounted() {
-        this.count()
         this.getAllSong()
     },
     computed: {
@@ -107,8 +167,15 @@ export default {
 
             }
         },
-        async count() {
-            this.songId = await this.$axios.$get('/karaokes/count') + 1
+        async checkId() {
+            try {
+                await this.$axios.$get(`/karaokes/${this.songId}`)
+                this.idCheck = true
+                this.msg = 'Trùng ID'
+            } catch(e) {
+                this.idCheck = false
+                this.msg = 'ID hợp lệ'
+            }
         },
     }
 }
