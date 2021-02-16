@@ -45,7 +45,6 @@
                     <v-col cols="3"><v-icon>mdi-playlist-music</v-icon>Bài tiếp</v-col>
                     <v-col cols="7">{{ songList[1].name }}</v-col>
                     <v-col cols="2">
-                    <v-btn elevation="0" fab x-small><v-icon>mdi-arrow-up-bold-circle-outline</v-icon></v-btn>
                     <v-btn elevation="0" fab x-small @click="deleteSongFromList(1)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
                     </v-col>
                 </v-row>
@@ -53,7 +52,7 @@
                     <v-col cols="3"></v-col>
                     <v-col cols="7">{{ item.name }}</v-col>
                     <v-col cols="2">
-                    <v-btn elevation="0" fab x-small><v-icon>mdi-arrow-up-bold-circle-outline</v-icon></v-btn>
+                    <v-btn elevation="0" fab x-small @click="topSongFromList(item, index+2)"><v-icon>mdi-arrow-up-bold-circle-outline</v-icon></v-btn>
                     <v-btn elevation="0" fab x-small @click="deleteSongFromList(index+2)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
                     </v-col>
                 </v-row>
@@ -117,7 +116,7 @@ export default {
         },
 
         nextSong() {
-        this.songList.shift()
+            this.songList.shift()
         },
 
         async addSongToList() {
@@ -141,6 +140,11 @@ export default {
                 this.msg = 'Bài hát không tồn tại'
                 this.songIdToAdd = ''
             }
+        },
+
+        topSongFromList(song,index) {
+            this.songList.splice(index,1)
+            this.songList.splice(1,0,song)
         },
         deleteSongFromList(index) {
             this.songList.splice(index,1)
