@@ -169,6 +169,11 @@ export default {
     height: 20rem;
     padding: 0.5rem;
 }
+.scroll {
+    height: 16rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
 .border {
     border: 1px black solid;
 }
