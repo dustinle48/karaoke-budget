@@ -70,7 +70,7 @@
 
         <client-only>
             <div class="youtube" v-if="songList.length > 0">
-                <youtube :video-id="songList[0].videoid" :player-vars="{ autoplay: 1 }" @ready="ready" @ended="end" player-width="1920" player-height="1080"></youtube>
+                <youtube :video-id="songList[0].videoid" :player-vars="{ autoplay: 1 }" resize fitParent ref="youtube" @ready="ready" @ended="end"></youtube>
             </div>
         </client-only>
     </v-container>
@@ -78,8 +78,8 @@
 
 <script>
 import Vue from 'vue'
-import VueYouTubeEmbed from 'vue-youtube-embed'
-Vue.use(VueYouTubeEmbed)
+import VueYouTube from 'vue-youtube'
+Vue.use(VueYouTube)
 export default {
     head: {
         title: 'Karaoke',
@@ -101,10 +101,12 @@ export default {
             msg: '',
         }
     },
+    computed: {
+        player() {
+            return this.$refs.youtube.player
+        }
+    },
     methods: {
-        ready (event) {
-            this.player = event.target
-        },
         end() {
             if (this.songList.length > 0) {
                 this.songList.shift()
@@ -149,10 +151,10 @@ export default {
 <style scoped>
 .container {
     height: 100vh;
-    overflow: hidden;
     padding: 0;
 }
 .menu-btn {
+    z-index: 24;
     position: fixed;
     top: 2rem;
     left: 2rem;
@@ -168,11 +170,5 @@ export default {
 }
 .border {
     border: 1px black solid;
-}
-.scroll {
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
-.youtube {
 }
 </style>

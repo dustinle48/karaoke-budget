@@ -8,7 +8,7 @@
                     <v-tab>Thêm bài</v-tab>
                     <v-tab to="/">Home</v-tab>
 
-                    <v-tab-item>
+                    <v-tab-item class="songlist">
                         <v-data-table
                             :headers="headers"
                             :items="songs"
@@ -51,7 +51,10 @@
 </template>
 
 <script>
+import { getIdFromUrl } from 'vue-youtube'
+
 export default {
+    layout: 'scroll',
     data() {
         return {
             search: '',
@@ -95,7 +98,7 @@ export default {
                 this.$axios.$post('/karaokes', {
                 name: this.name,
                 songid: this.songId,
-                videoid: getIdFromURL(this.videoId)
+                videoid: getIdFromUrl(this.videoId)
                 })
                 this.count()
                 this.name = ''
@@ -116,6 +119,6 @@ export default {
     height: 100vh;
 }
 .tall {
-    height: 100vh;
+   height: 100vh;
 }
 </style>
