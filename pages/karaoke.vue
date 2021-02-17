@@ -22,11 +22,18 @@
             <v-col cols="4">
                 <v-row>
                     <v-col>
-                        <v-text-field outlined label="Mã bài hát" v-model="songIdToAdd" clearable></v-text-field>
-                        <p v-if="msg" class="text--disabled">{{ msg }}</p>
-                        <v-btn @click="addSongToList" :disabled="!songIdToAdd">Thêm</v-btn>
-                        <v-btn @click="addSongToTop" :disabled="!songIdToAdd">Lên đầu</v-btn>
-                        <v-btn @click="nextSong">Next</v-btn>
+                        <v-progress-circular
+                            v-if="status=='loading'"
+                            indeterminate
+                            color="primary"
+                        ></v-progress-circular>
+                        <div v-else>
+                            <v-text-field outlined label="Mã bài hát" v-model="songIdToAdd" clearable></v-text-field>
+                            <p v-if="msg" class="text--disabled">{{ msg }}</p>
+                            <v-btn @click="addSongToList" :disabled="!songIdToAdd">Thêm</v-btn>
+                            <v-btn @click="addSongToTop" :disabled="!songIdToAdd">Lên đầu</v-btn>
+                            <v-btn @click="nextSong">Next</v-btn>
+                        </div>
                         <v-btn class="ma-6" to="/"><v-icon>mdi-home</v-icon></v-btn>
                     </v-col>
                 </v-row>
@@ -92,6 +99,7 @@ export default {
     },
     data() {
         return {
+            status: '',
             songList: [],
             songId: '',
             name: '',
@@ -120,23 +128,29 @@ export default {
         },
 
         async addSongToList() {
+            this.status = 'loading'
             try {
                 const song = await this.$axios.$get(`/karaokes/${this.songIdToAdd}`)
                 this.songIdToAdd = ''
                 this.songList.push(song)
                 this.msg = 'Đã thêm bài vào list'
+                this.status = 'success'
             } catch(e) {
+                this.status = 'error'
                 this.msg = 'Bài hát không tồn tại'
                 this.songIdToAdd = ''
             }
         },
         async addSongToTop() {
+            this.status = 'loading'
             try {
                 const song = await this.$axios.$get(`/karaokes/${this.songIdToAdd}`)
                 this.songIdToAdd = ''
                 this.songList.splice(1,0,song)
                 this.msg = 'Đã thêm bài hát lên đầu!'
+                this.status = 'success'
             } catch(e) {
+                this.status = 'error'
                 this.msg = 'Bài hát không tồn tại'
                 this.songIdToAdd = ''
             }
