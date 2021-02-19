@@ -30,9 +30,9 @@ export default {
 
 <style scoped>
 .container {
-    height: 100vh;
+    min-height: 100vh;
 }
 .tall {
-   height: 100vh;
+    height: 100vh;
 }
 </style>
