@@ -1,6 +1,5 @@
 export default {
-  // Target: https://go.nuxtjs.dev/config-target
-  target: 'static',
+  dev: process.env.NODE_ENV == 'production',
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -38,7 +37,8 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    'nuxt-socket-io'
   ],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -56,7 +56,16 @@ export default {
     baseURL: 'https://sach-luyen-du-hoc-backend.herokuapp.com/'
   },
 
+  io: {
+    // module options
+    sockets: [{
+      name: 'main',
+      /* url: 'http://localhost:5000', */
+      url: 'https://karaoke-budget-backend.herokuapp.com/'
+    }]
+  },
+
   generate: {
     fallback: true
-  }
+  },
 }

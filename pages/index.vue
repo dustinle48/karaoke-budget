@@ -4,8 +4,8 @@
       <v-col class="col-lg-2 hidden-md-and-down"></v-col>
       <v-col>
         <h1 class="mb-12">Chào mừng tới Budget Karaoke</h1>
-        <v-btn to="/karaoke" color="red" x-large>Quẩy</v-btn>
-        <v-btn to="/database" color="green" x-large>Database</v-btn>
+        <v-btn to="/lobby" color="red" x-large>Server</v-btn>
+        <v-btn to="/database" color="green" x-large>Client</v-btn>
       </v-col>
       <v-col class="col-lg-2 hidden-md-and-down"></v-col>
     </v-row>
@@ -30,7 +30,6 @@ export default {
 <style scoped>
 .container {
   height: 100vh;
-  align-content: center;
   background-image: url(/bg.JPG);
   background-size: cover;
 }
