@@ -60,7 +60,7 @@ export default {
     sockets: [{
       name: 'main',
       /* url: 'http://localhost:5000', */
-      url: 'https://karaoke-budget-backend.herokuapp.com/'
+      url: 'https://karaoke-budget-backend.herokuapp.com'
     }]
   },
 
