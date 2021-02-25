@@ -1,7 +1,6 @@
 <template>
     <v-container fluid>
-        <div>
-            <v-menu
+        <v-menu
                 class="menu"
                 :close-on-content-click="false"
                 offset-x
@@ -60,20 +59,21 @@
                         <v-col cols="3"></v-col>
                         <v-col cols="7">{{ item.name }}</v-col>
                         <v-col cols="2">
-                        <v-btn elevation="0" fab x-small @click="topSongFromList(item, index+2)"><v-icon>mdi-arrow-up-bold-circle-outline</v-icon></v-btn>
-                        <v-btn elevation="0" fab x-small @click="deleteSongFromList(index+2)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                            <v-btn elevation="0" fab x-small @click="moveSongUp(item, index+2)"><v-icon>mdi-chevron-up</v-icon></v-btn>
+                            <v-btn elevation="0" fab x-small @click="topSongFromList(item, index+2)"><v-icon>mdi-chevron-triple-up</v-icon></v-btn>
+                            <v-btn elevation="0" fab x-small @click="deleteSongFromList(index+2)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
                         </v-col>
                     </v-row>
                     </div>
                 </v-col>
                 </v-row>
             </div>
-            </v-menu>
+        </v-menu>
 
-            <div class="text-center" v-if="songList.length == 0">
-                <h1>Chọn bài đi, đừng ngại</h1>
-                <h1>Bấm F11 để mở full màn hình</h1>
-            </div>
+        <div class="start mx-3">
+            <v-row class="start text-center" justify="center" align="center" v-if="songList.length == 0">
+                <h1>Choose a song, don't be shy! Remember to fullscreen the player.</h1>
+            </v-row>
 
             <client-only>
                 <div class="youtube" v-if="songList.length > 0">
@@ -132,8 +132,11 @@ export default {
         .on('add-song-to-top', (song) => {
             this.songList.splice(1,0,song)
         })
-        .on('top-song-from-list', (song,index) => {
-            this.topSongFromList(song,index)
+        .on('move-song-up', (song, index) => {
+            this.moveSongUp(song, index)
+        })
+        .on('top-song-from-list', (song, index) => {
+            this.topSongFromList(song, index)
         })
         .on('delete-song-from-list',(index) =>{
             this.deleteSongFromList(index)
@@ -189,7 +192,10 @@ export default {
                 this.songIdToAdd = ''
             }
         },
-
+        moveSongUp(song, index) {
+            this.songList.splice(index,1)
+            this.songList.splice(index-1,0,song)
+        },
         topSongFromList(song,index) {
             this.songList.splice(index,1)
             this.songList.splice(1,0,song)
@@ -206,6 +212,9 @@ export default {
     height: 100vh;
     padding: 0;
 }
+.start {
+    height: 100%;
+}
 .menu-btn {
     z-index: 24;
     position: fixed;
@@ -220,11 +229,6 @@ export default {
     width: 55rem;
     height: 20rem;
     padding: 0.5rem;
-}
-.scroll {
-    height: 16rem;
-    overflow-y: scroll;
-    overflow-x: hidden;
 }
 .border {
     border: 1px black solid;

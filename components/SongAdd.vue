@@ -1,7 +1,13 @@
 <template>
     <v-container>
-        <div class="adder mt-6">
-            <v-row>
+        <div class="mt-6">
+            <v-progress-circular
+                v-if="status=='loading'"
+                indeterminate
+                color="primary"
+            ></v-progress-circular>
+
+            <v-row v-if="status=='success'">
                 <v-col>
                     <validation-observer
                         ref="observer"
@@ -19,7 +25,7 @@
                                 <v-text-field outlined label="Mã bài hát" :error-messages="errors" placeholder="Chọn ngẫu nhiên 1 số 5 chữ số" v-on:focusout="checkId" v-model="songId" clearable></v-text-field>
                             </validation-provider>
 
-                            <p class="text--disabled">{{ msg }}</p>
+                            <p class="text--disabled">{{ idmsg }}</p>
 
                             <validation-provider
                                 v-slot="{ errors }"
@@ -37,6 +43,8 @@
                             <v-text-field outlined label="Link bài hát" :error-messages="errors" v-model="videoId" clearable></v-text-field>
                             </validation-provider>
 
+                            <p class="text--disabled">{{ videoidmsg }}</p>
+
                             <v-btn :disabled="idCheck==true || invalid" type="submit">Thêm</v-btn>
                             <v-btn @click="clear">Xóa</v-btn>
                         </v-form>
@@ -48,6 +56,7 @@
 </template>
 
 <script>
+import swal from 'sweetalert'
 import { getIdFromUrl } from 'vue-youtube'
 import { required, digits, email, max } from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
@@ -81,12 +90,14 @@ export default {
     },
     data() {
         return {
-            status: 'loading',
+            status: 'success',
             idCheck: true,
+            videoidCheck: true,
             name: '',
             songId: '',
             videoId: '',
-            msg: '',
+            idmsg: '',
+            videoidmsg: '',
         }
     },
     methods: {
@@ -105,20 +116,43 @@ export default {
                 })
                 this.name = ''
                 this.songId = ''
+                this.videoId = ''
                 this.status = 'success'
+                swal({
+                    title: "Success!",
+                    text: "Song added successfully",
+                    icon: "success",
+                });
             } catch(e) {
+                swal({
+                    title: "Oh no!",
+                    text: "Error has occured!",
+                    icon: "error",
+                });
                 this.status = 'error'
             }
         },
         async checkId() {
-            this.msg = 'Đang check, chờ xíu ...'
+            this.idmsg = 'Checking ...'
             try {
                 await this.$axios.$get(`/karaokes/${this.songId}`)
                 this.idCheck = true
-                this.msg = 'Trùng ID'
+                this.idmsg = 'Duplicate ID'
             } catch(e) {
                 this.idCheck = false
-                this.msg = 'ID hợp lệ'
+                this.idmsg = 'Valid ID'
+            }
+        },
+        async checkVideoId() {
+            this.videoidmsg = 'Checking ...'
+            let link = getIdFromUrl(this.videoId)
+            try {
+                await this.$axios.$get(`/karaokes/${link}`)
+                this.videoidCheck = true
+                this.videoidmsg = 'Duplicate link'
+            } catch(e) {
+                this.videoidCheck = false
+                this.videoidmsg = 'Valid link'
             }
         },
     }

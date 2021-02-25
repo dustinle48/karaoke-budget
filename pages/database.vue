@@ -4,23 +4,23 @@
             <v-col class="hidden-md-and-down"></v-col>
             <v-col>
                 <v-tabs class="tall" centered>
-                    <v-tab>Điều khiển</v-tab>
-                    <v-tab>Dò bài</v-tab>
-                    <v-tab>Thêm bài</v-tab>
+                    <v-tab>Control</v-tab>
+                    <v-tab>Search</v-tab>
+                    <v-tab>Add</v-tab>
                     <v-tab to="/">Home</v-tab>
 
                     <v-tab-item>
                         <div v-if="!room">
                             <v-row>
                                 <v-col cols="3" v-for="item in rooms" :key="item.index">
-                                    <v-btn @click="connectToRoom(item.name)">
+                                    <v-btn class="my-3" @click="connectToRoom(item.name)">
                                         {{ item.name }}
                                     </v-btn>
                                 </v-col>
                             </v-row>
                         </div>
                         <div v-if="room">
-                            <h2>Đã vào {{ room }}</h2>
+                            <h2 class="my-3">Connected to {{ room }}</h2>
                         </div>
                         <div v-if="room">
                             <v-tabs centered>
@@ -50,24 +50,26 @@
                                             <v-col>
                                                 <div v-if="songList.length" class="border">
                                                     <v-row>
-                                                        <v-col cols="3"><v-icon>mdi-play</v-icon> Đang phát</v-col>
-                                                        <v-col cols="9">{{ songList[0].name }}</v-col>
+                                                        <v-col class="text-left" cols="1"><v-icon>mdi-play</v-icon></v-col>
+                                                        <v-col class="text-center" cols="7">{{ songList[0].name }}</v-col>
+                                                        <v-col cols="3"></v-col>
                                                     </v-row>
                                                 </div>
                                                 <div v-if="songList.length >= 2" class="mt-4 scroll">
                                                     <v-row>
-                                                        <v-col cols="3"><v-icon>mdi-playlist-music</v-icon>Bài tiếp</v-col>
-                                                        <v-col cols="7">{{ songList[1].name }}</v-col>
-                                                        <v-col cols="2">
-                                                        <v-btn elevation="0" fab x-small @click="deleteSongFromList(1)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                                        <v-col class="text-left" cols="1"><v-icon>mdi-playlist-music</v-icon></v-col>
+                                                        <v-col class="text-center" cols="7">{{ songList[1].name }}</v-col>
+                                                        <v-col class="text-right" cols="4">
+                                                            <v-btn elevation="0" fab x-small @click="deleteSongFromList(1)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
                                                         </v-col>
                                                     </v-row>
                                                     <v-row v-for="(item, index) in songList.slice(2,songList.length)" :key="item.index">
-                                                        <v-col cols="3"></v-col>
-                                                        <v-col cols="7">{{ item.name }}</v-col>
-                                                        <v-col cols="2">
-                                                        <v-btn elevation="0" fab x-small @click="topSongFromList(item, index+2)"><v-icon>mdi-arrow-up-bold-circle-outline</v-icon></v-btn>
-                                                        <v-btn elevation="0" fab x-small @click="deleteSongFromList(index+2)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
+                                                        <v-col class="text-left" cols="1"></v-col>
+                                                        <v-col class="text-center" cols="7">{{ item.name }}</v-col>
+                                                        <v-col class="text-right" cols="4">
+                                                            <v-btn elevation="0" fab x-small @click="moveSongUp(item, index+2)"><v-icon>mdi-chevron-up</v-icon></v-btn>
+                                                            <v-btn elevation="0" fab x-small @click="topSongFromList(item, index+2)"><v-icon>mdi-chevron-triple-up</v-icon></v-btn>
+                                                            <v-btn elevation="0" fab x-small @click="deleteSongFromList(index+2)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
                                                         </v-col>
                                                     </v-row>
                                                 </div>
@@ -82,11 +84,11 @@
                             </v-tabs>     
                         </div>
                     </v-tab-item>
-                    <v-tab-item class="songlist">
+                    <v-tab-item class="ma-3">
                         <SongList />
                     </v-tab-item>
 
-                    <v-tab-item class="tall">
+                    <v-tab-item class="ma-3">
                         <SongAdd />
                     </v-tab-item>
                 </v-tabs>
@@ -139,6 +141,9 @@ export default {
         })
         .on('add-song-to-top', (song, user) => {
             this.chat.push(`${user} topped ${song.name}`)
+        })
+        .on('move-song-up', (song, index, user) => {
+            this.chat.push(`${user} moved ${song.name} up from ${index}`)
         })
         .on('top-song-from-list', (song, index, user) => {
             this.chat.push(`${user} topped ${song.name} from ${index}`)
@@ -197,7 +202,9 @@ export default {
                 this.songIdToAdd = ''
             }
         },
-
+        moveSongUp(song, index) {
+            this.socket.emit('move-song-up', this.room, song, index)
+        },
         topSongFromList(song, index) {
             this.socket.emit('top-song-from-list', this.room, song, index)
         },
@@ -210,15 +217,14 @@ export default {
 
 <style scoped>
 .container {
-    min-height: 100vh;
     padding: 0;
-}
-.tall {
-    height: 100vh;
 }
 .controller {
     height: 100%;
     background-color: wheat;
     padding: 0.5rem;
+}
+.border {
+    border: 1px black solid;
 }
 </style>
