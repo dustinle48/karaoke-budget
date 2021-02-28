@@ -37,7 +37,7 @@ export default {
 <style scoped>
 .container {
   height: 100vh;
-  background-image: url(/bg.JPG);
+  background-image: url(/mic.jpg);
   background-size: cover;
 }
 .overlay {
