@@ -5,9 +5,22 @@
             <v-col>
                 <v-row>
                     <v-col cols="3" v-for="item in rooms" :key="item.index">
-                        <v-btn :to="`/room/${item.name}`" height="10rem" color="pink">
-                            {{ item.name }}
-                        </v-btn>
+                        <div v-if="status=='loading'">
+                            <v-progress-circular
+                                indeterminate
+                                color="primary"
+                            ></v-progress-circular>
+                        </div>
+                        
+                        <div v-if="status=='error'">
+                            <h2>An error has occurred!</h2>
+                        </div>
+
+                        <div v-if="status=='success'">
+                            <v-btn :to="`/room/${item.name}`" height="10rem" color="pink">
+                                {{ item.name }}
+                            </v-btn>
+                        </div>
                     </v-col>
                 </v-row>
             </v-col>
@@ -20,6 +33,7 @@
 export default {
     data() {
         return {
+            status: 'loading',
             rooms: [],
             color: ['blue','red','green','cyan']
         }
@@ -31,8 +45,14 @@ export default {
         })
         /* --------------------------------------- */
         this.socket
-        .on('rooms', (rooms) => {
-            this.rooms = rooms
+        .on('rooms', async (rooms) => {
+            this.status = "loading"
+            try {
+                this.rooms = rooms
+                this.status = 'success'
+            } catch(e) {
+                this.status = 'error'
+            }
         })
     },
     methods: {

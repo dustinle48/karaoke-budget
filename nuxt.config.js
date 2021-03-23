@@ -52,15 +52,15 @@ export default {
 
   axios: {
     /* baseURL: 'http://localhost:1337/' */
-    baseURL: 'https://sach-luyen-du-hoc-backend.herokuapp.com/'
+    baseURL: 'https://karaoke-budget-backend.herokuapp.com/'
   },
 
   io: {
     // module options
     sockets: [{
       name: 'main',
-      /* url: 'http://localhost:5000', */
-      url: 'https://karaoke-budget-backend.herokuapp.com'
+      url: 'http://localhost:5000',
+      /* url: 'https://karaoke-budget-backend.herokuapp.com' */
     }]
   },
 
