@@ -51,7 +51,7 @@ export default {
   },
 
   axios: {
-    /* baseURL: 'http://localhost:1337/' */
+    /* baseURL: 'http://localhost:5000/' */
     baseURL: 'https://karaoke-budget-backend.herokuapp.com/'
   },
 
@@ -59,8 +59,8 @@ export default {
     // module options
     sockets: [{
       name: 'main',
-      url: 'http://localhost:5000',
-      /* url: 'https://karaoke-budget-backend.herokuapp.com' */
+      /* url: 'http://localhost:5000', */
+      url: 'https://karaoke-budget-backend.herokuapp.com'
     }]
   },
 

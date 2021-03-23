@@ -133,12 +133,12 @@ export default {
             }
         },
         async checkId() {
-            this.idmsg = 'Checking ...'
-            try {
-                await this.$axios.$get(`/karaokes/${this.songId}`)
+            this.idmsg = 'Checking ...'  
+            const data = await this.$axios.$get(`/karaokes/${this.songId}`)
+            if (data) {
                 this.idCheck = true
                 this.idmsg = 'Duplicate ID'
-            } catch(e) {
+            } else {
                 this.idCheck = false
                 this.idmsg = 'Valid ID'
             }
