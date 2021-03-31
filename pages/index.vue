@@ -70,17 +70,16 @@ export default {
   backdrop-filter: blur(50px);
   border-top: 1px solid rgba(255,255,255,0.5);
   border-left: 1px solid rgba(255,255,255,0.5);
+  font-size: 2rem !important;
 }
 .server-btn {
   color: white;
-  font-size: 2rem;
   background-image: linear-gradient(rgba(40,40,40,0.5),rgba(40,40,40,0.7)), url('/theatre.jpg');
   background-size: cover;
   background-blend-mode: multiply;
 }
 .client-btn {
   color: white;
-  font-size: 2rem;
   background-image: linear-gradient(rgba(53,0,211,0.7),rgba(53,0,211,0.7)), url('/mic.jpg');
   background-size: cover;
   background-blend-mode: multiply;
