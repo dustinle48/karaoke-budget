@@ -1,16 +1,16 @@
 <template>
     <v-container fluid>
         <v-menu
-                class="menu"
-                :close-on-content-click="false"
-                offset-x
-            >
+            class="menu"
+            :close-on-content-click="false"
+            offset-x
+        >
             <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                rounded
-                v-bind="attrs"
-                v-on="on"
-                class="menu-btn"
+                    rounded
+                    v-bind="attrs"
+                    v-on="on"
+                    class="menu-btn"
                 >
                     <v-icon>mdi-post</v-icon>
                 </v-btn>
@@ -70,17 +70,25 @@
             </div>
         </v-menu>
 
-        <div class="start mx-3">
-            <v-row class="start text-center" justify="center" align="center" v-if="songList.length == 0">
-                <h1>Choose a song, don't be shy! Remember to fullscreen the player.</h1>
-            </v-row>
+        <v-row class="start text-center" align="center" justify="center">
+            <v-col>
+                <v-row align="center" justify="center">
+                    <h1>Room : {{ room }}</h1>
+                    <h1>Password :</h1>
+                </v-row>
 
-            <client-only>
-                <div class="youtube" v-if="songList.length > 0">
-                    <youtube :video-id="songList[0].videoid" :player-vars="{ autoplay: 1 }" ref="youtube" @ended="end"></youtube>
-                </div>
-            </client-only>
-        </div>
+                <v-row v-if="songList.length == 0" align="center" justify="center">
+                    <h1>Choose a song, don't be shy! Remember to fullscreen the player.</h1>
+                    <h1>Closing this tab will also delete this room and the song list you have added!</h1>
+                </v-row>
+
+                <v-row class="youtube" v-if="songList.length > 0" align="center" justify="center">
+                    <client-only>
+                        <youtube :video-id="songList[0].videoid" :player-vars="{ autoplay: 1 }" ref="youtube" @ended="end"></youtube>
+                    </client-only>
+                </v-row>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
@@ -145,6 +153,9 @@ export default {
             this.nextSong()
         })
     },
+    destroyed() {
+        this.deleteRoom()
+    },
     computed: {
         player() {
             return this.$refs.youtube.player
@@ -156,6 +167,10 @@ export default {
         }
     },
     methods: {
+        deleteRoom() {
+            this.$axios.$delete('/rooms', {data: {name:this.room}})
+        },
+
         end() {
             this.songList.shift()
         },
@@ -210,10 +225,10 @@ export default {
 <style scoped>
 .container {
     height: 100vh;
-    padding: 0;
 }
 .start {
     height: 100%;
+    color: white;
 }
 .menu-btn {
     z-index: 24;
@@ -229,8 +244,5 @@ export default {
     width: 55rem;
     height: 20rem;
     padding: 0.5rem;
-}
-.border {
-    border: 1px black solid;
 }
 </style>

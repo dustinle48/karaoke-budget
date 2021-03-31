@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Nuxt />
+    <Nuxt class="main" />
   </v-app>
 </template>
 
@@ -9,5 +9,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.main {
+  background: linear-gradient(black,#0C0032) !important;
+}
 </style>

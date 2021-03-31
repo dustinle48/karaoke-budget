@@ -1,5 +1,5 @@
 <template>
-    <v-container class="text-center">
+    <v-container fluid class="text-center">
         <v-row class="tall">
             <v-col class="hidden-md-and-down"></v-col>
             <v-col>
@@ -116,14 +116,11 @@ export default {
         }
     },
     mounted() {
+        this.getRooms()
+
         this.socket = this.$nuxtSocket({
             name: 'main',
             channel: '/'
-        })
-        /* --------------------------------------- */
-        this.socket
-        .on('rooms', (rooms) => {
-            this.rooms = rooms
         })
         /* --------------------------------------- */
         this.socket
@@ -156,6 +153,10 @@ export default {
         })
     },
     methods: {
+        async getRooms() {
+            this.rooms = await this.$axios.$get('/rooms')
+        },
+
         connectToRoom(room) {
             this.songList = ''
             if (!this.room) {
@@ -223,8 +224,5 @@ export default {
     height: 100%;
     background-color: wheat;
     padding: 0.5rem;
-}
-.border {
-    border: 1px black solid;
 }
 </style>
